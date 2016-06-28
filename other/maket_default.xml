@@ -1,0 +1,101 @@
+<maket name="default" >
+	<commands>
+		<command name = "output_directory" value="c:\ext_bank_F\[bankIdentCode]\[current_date]">
+			<fields>
+				<field name="bankIdentCode">
+					<source class="Source" fieldName="bankIdentCode"/>
+				</field>
+			</fields>
+			<parametrs>
+				<parametr name="current_date" execute="get_current_date">
+					<format type="date">
+						<df>ddmmyyyy</df>
+						<dfs>/</dfs>
+					</format>
+				</parametr>				
+			</parametrs>
+		</command>
+		<command name = "output_name" value="FU[agreementNumber].I[next_file_index]">
+			<fields>
+				<field name="agreementNumber">
+					<source class="Source" fieldName="agreementNumber"/>
+				</field>
+			</fields>
+			<parametrs>
+				<parametr name="next_file_index" execute="get_file_index_in_output_directory">
+					<format type="number">
+						<ip>3</ip>
+						<lz>true</lz>
+					</format>
+				</parametr>
+			
+			</parametrs>
+		</command>	
+	</commands>
+	<regions>
+		<region name="Head">
+			<lines>
+				<line number = "1" value="Первый параметр: [field1] Второй параметр: [field2] Третий параметр: [field3]">
+					<fields>
+						<field name="field1" size="5" aligment="right" supplementSymbol=">">
+							<source class="Source" fieldName="count"/>
+							<format type="number">
+								<ip>5</ip>
+							</format>
+						</field>
+						<field name="field2" size="8" aligment="right">
+							<source class="Source" fieldName="branchBank"/>
+							<source class="Source" fieldName="branchBankBranch"/>
+						</field>
+						<field name="field3" size="15" aligment="right">
+							<source class="Source" fieldName="total"/>
+							<format type="number">
+								<ip>12</ip>
+								<f>2</f>
+								<ns>.</ns>	
+							</format>
+						</field>
+					</fields>
+				</line>
+				<line number="2" value="----------------------------------------------------------------------------------------------"/>
+			</lines>
+		</region>
+		<region name="Body">
+			<lines>
+				<line number="1" value="Фамилия            |Имя                |Отчество           |Лицевой счет        |Сумма       |"/>
+				
+				<line number="2" value="[field1][field2][field3][field4][field5]">
+					<fields>
+						<field name="field1" size="20" aligment="left">
+							<source class="Source.table" fieldName="surname"/>
+						</field>
+						<field name="field2" size="20" aligment="left">
+							<source class="Source.table" fieldName="name"/>
+						</field>
+						<field name="field3" size="20" aligment="left">
+							<source class="Source.table" fieldName="patronym"/>
+						</field>
+						<field name="field4" size="20">
+							<source class="Source.table" fieldName="persAccount"/>
+						</field>
+						<field name="field5" size="12" aligment="right">
+							<source class="Source.table" fieldName="summa"/>
+							<format type="number">
+								<ip>9</ip>
+								<f>2</f>
+								<ns>.</ns>
+							</format>
+						</field>
+					</fields>
+				</line>
+			</lines>
+		</region>
+	</regions>
+	<outputRulez>
+		<rulez regionName="Head" lineNumber="1"/>
+		<rulez regionName="Head" lineNumber="2" repeat="2"/>
+		<rulez regionName="Body" lineNumber="1"/>
+		<rulez regionName="Body" lineNumber="2" table="true"/>
+		<rulez regionName="Head" lineNumber="2"/>		
+	</outputRulez>
+</maket>
